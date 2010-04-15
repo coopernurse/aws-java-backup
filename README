@@ -1,0 +1,40 @@
+aws-java-backup - command line tools for copying S3 buckets and SimpleDB dbs to another account
+---------------
+
+Example use cases:
+
+  - You have production data in a S3 / SimpleDB AWS account that you want to copy to a private account whose keys
+    are not on your production servers
+
+  - You want to backup/restore data for dev purposes
+
+Requirements:
+
+    JDK 1.6
+    Maven 2
+
+Building:
+
+    mvn compile
+    mvn assembly:single
+       This will produce: aws-backup-1.0-jar-with-dependencies.jar
+
+Running:
+
+  - To sync a S3 bucket to another bucket, possibly in a different AWS account:
+
+    java -cp aws-backup-1.0-jar-with-dependencies.jar com.bitmechanic.aws.SyncBuckets \
+       --from accessKey:secretKey:bucketName --to accessKey:secretKey:bucketName [--verbose]
+
+    If the bucketName specified in --to does not exist, it will be created.
+
+    CAREFUL: Any objects in --to that are NOT in --from will be removed.  This command makes --to and --from identical.
+
+
+  - To copy a SimpleDB domain to another domain, possibly in a different AWS account:
+
+    java -cp aws-backup-1.0-jar-with-dependencies.jar com.bitmechanic.aws.CopySimpleDB \
+       --from accessKey:secretKey:domain --to accessKey:secretKey:domain [--verbose]
+
+    The domain specified in --to will be DELETED and CREATED.
+    All items in --from will be copied into --to
